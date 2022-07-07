@@ -1,35 +1,21 @@
-import Directory from "./Components/Directory/Directory";
+import {Routes,Route} from 'react-router-dom';
+import Navigation from "./routes/navigation/Navigation";
+import Home from "./routes/home/HomeComponent";
+import SignIn from './routes/signIn/SignIn';
+const Shop = () => {
+  return <div>
+    SHOP SHOP SHOP
+  </div>
+}
 function App() {
-  const categories=[
-    {
-      id: 1,
-      type: 'Hats',
-      imageUrl: "https://i.ibb.co/cvpntL1/hats.png"
-    },
-    {
-      id: 2,
-      type: 'Jackets',
-      imageUrl: "https://i.ibb.co/px2tCc3/jackets.png"
-    },
-    {
-      id: 3,
-      type: 'Shoes',
-      imageUrl: "https://i.ibb.co/0jqHpnp/sneakers.png"
-    },
-    {
-      id: 4,
-      type: 'Womens',
-      imageUrl: "https://i.ibb.co/GCCdy8t/womens.png"
-    },
-    {
-      id: 5,
-      type: 'Mens',
-      imageUrl: "https://i.ibb.co/R70vBrQ/men.png"
-    },
-
-  ]
   return (
-    <Directory categories={categories}/>
+    <Routes>
+      <Route path="/" element={ <Navigation /> } >
+        <Route index element={ <Home /> }/>
+        <Route path="/shop" element={ <Shop /> }/>
+        <Route path="/sign-in" element={ <SignIn /> }/>
+        </Route>
+    </Routes>
   );
 }
 
