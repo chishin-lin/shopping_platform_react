@@ -4,7 +4,8 @@ import {
     getAuth, 
     signInWithRedirect,
     signInWithPopup,
-    GoogleAuthProvider
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword //使用密碼及信箱建立帳戶
 } from 'firebase/auth';
 import {
     getFirestore,
@@ -25,17 +26,23 @@ const firebaseConfig = {
   // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
+//這裡使用google驗證，可引入FacebookAuthProvider>Facebook驗證
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
     prompt: 'select_account'
 });
 
 export const auth = getAuth();
+//google彈窗登入
 export const signInWithGooglePopup = () => signInWithPopup(auth,provider);
+//進入google驗證頁面，完成後會自動重定向(初始化)帶回我們的網頁，因此會刷新頁面
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth,provider);
+
 export const db = getFirestore();
 
 //建立使用者文件
-export const createUserDocumentFromAuth = async(userAuth)=>{
+export const createUserDocumentFromAuth = async(userAuth,additionalInformation={})=>{
+    if(!userAuth) return; //以確保參數
     const useDocRef = doc(db,'user',userAuth.uid);
 
     const userSnapshot = await getDoc(useDocRef);
@@ -48,7 +55,8 @@ export const createUserDocumentFromAuth = async(userAuth)=>{
             await setDoc(useDocRef,{
                 displayName,
                 email,
-                createdAt
+                createdAt,
+                ...additionalInformation
             })
         } catch (error) {
             console.log("Error creating the user", error.message);
@@ -56,4 +64,10 @@ export const createUserDocumentFromAuth = async(userAuth)=>{
     }
     //若有用戶，直接return
     return useDocRef;
+};
+
+export const createAuthUserWithEmailAndPassword = async(email,password) => {
+    if(!email || !password)return;
+    
+    return await createUserWithEmailAndPassword(auth, email, password);
 }
