@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+
 import {
     createAuthUserWithEmailAndPassword,
     createUserDocumentFromAuth
@@ -36,6 +38,7 @@ const SignUpForm = () => {
 
         try {
             const {user} = await createAuthUserWithEmailAndPassword(email,displayName);
+            // setCurrentUser(user); //改變useContext value
             await createUserDocumentFromAuth(user,{displayName});
             resetFromFields();  //提交後清空表單資料
         } catch (error) {
@@ -49,7 +52,7 @@ const SignUpForm = () => {
     }
     return (
         <div className="sign-up-container">
-            <h2>Don't have ann account?</h2>
+            <h2>Don't have any account?</h2>
             <span>Sign up with your email and password</span>
             <form onSubmit={handleSubmit}>
                 
